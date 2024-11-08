@@ -8,3 +8,4 @@ openai
 SQLAlchemy
 python-dateutil
 pytest
+pytest-asyncio
