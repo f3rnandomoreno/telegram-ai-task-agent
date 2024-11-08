@@ -2,7 +2,7 @@
 
 **Descripción General**
 
-Esta aplicación es un bot de Telegram que actúa como un gestor de tareas inteligente, permitiendo a los usuarios crear, asignar y gestionar tareas mediante lenguaje natural. El bot utiliza inteligencia artificial para interpretar los comandos de los usuarios y convertirlos en operaciones sobre una base de datos. Utiliza gpt-4o-mini como modelo.
+Esta aplicación es un bot de Telegram que actúa como un gestor de tareas inteligente, permitiendo a los usuarios crear, asignar y gestionar tareas mediante lenguaje natural. El bot utiliza inteligencia artificial para interpretar los comandos de los usuarios y convertirlos en operaciones sobre una base de datos. Utiliza gpt-4o-mini como modelo. Usa como base de datos sqlite.
 
 **Funcionalidades Principales**
 
