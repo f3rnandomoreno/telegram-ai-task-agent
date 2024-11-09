@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine, inspect
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, declarative_base
 from config.settings import DATABASE_URL
 import os
 
+# Create Base class for models
 Base = declarative_base()
 
 class Database:
@@ -50,8 +50,4 @@ class Database:
 
     def create_tables(self):
         """Create all tables in the database"""
-        # Import models here to avoid circular imports
-        from models.task import Task
-        from models.user import User
-        
-        Base.metadata.create_all(bind=self.engine) 
+        Base.metadata.create_all(bind=self.engine)

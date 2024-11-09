@@ -1,8 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 from datetime import datetime
-
-Base = declarative_base()
+from utils.database import Base
 
 class User(Base):
     __tablename__ = 'users'
@@ -15,4 +14,7 @@ class User(Base):
     firstName = Column(String)
     lastName = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow) 
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relación con las tareas
+    tasks = relationship("Task", back_populates="assigned_user") 
