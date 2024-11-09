@@ -29,22 +29,28 @@ def test_db():
     # Crear el motor de base de datos
     engine = create_engine('sqlite:///:memory:', echo=True)  # echo=True para ver las consultas SQL
     
+    # Asegurarse de que todas las tablas estén registradas antes de crearlas
+    from models.user import User  # Asegurarse de importar todos los modelos
+    from models.task import Task
+    
     # Crear todas las tablas
     logger.info("Creando tablas en la base de datos")
+    Base.metadata.drop_all(engine)  # Limpiar tablas existentes
     Base.metadata.create_all(engine)
     
-    # Verificar tablas creadas
+    # Verificar tablas creadas y sus columnas
     inspector = inspect(engine)
     tables = inspector.get_table_names()
-    logger.info(f"Tablas creadas: {tables}")
+    for table in tables:
+        columns = [col['name'] for col in inspector.get_columns(table)]
+        logger.info(f"Tabla {table} creada con columnas: {columns}")
     
     # Crear la sesión
     SessionLocal = sessionmaker(bind=engine)
     
     # Crear una instancia de Database con el motor de prueba
-    db = Database()
-    db.engine = engine
-    db.SessionLocal = SessionLocal
+    db = Database(engine=engine, session_maker=SessionLocal)
+
     
     logger.info("Configuración de base de datos completada")
     return db
@@ -126,6 +132,8 @@ class TestNL2SQLIntegration:
         logger.info(f"Tarea creada: {task.description if task else 'None'}")
         session.close()
 
+        # assert that result does not contain error message
+        assert "error" not in result, f"Error en resultado: {result}"
         assert task is not None, "La tarea no fue creada"
         assert task.status == "TODO", f"Estado incorrecto: {task.status}"
 

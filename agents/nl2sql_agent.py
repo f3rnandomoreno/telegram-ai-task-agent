@@ -6,8 +6,8 @@ from utils.database import Database
 from langchain.prompts import PromptTemplate
 
 class NL2SQLAgent:
-    def __init__(self,database:None):
-        self.llm = OpenAI(temperature=0, api_key=OPENAI_API_KEY)
+    def __init__(self, database:None):
+        self.llm = OpenAI(temperature=0, api_key=OPENAI_API_KEY, model="gtp-4o-mini")
         self.db = Database()
         self.sql_database = SQLDatabase(database.engine) if database else SQLDatabase(self.db.engine)
 

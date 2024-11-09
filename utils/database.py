@@ -9,34 +9,38 @@ Base = declarative_base()
 class Database:
     _instance = None
 
-    def __new__(cls):
+    def __new__(cls, engine=None, session_maker=None):
         if cls._instance is None:
             cls._instance = super(Database, cls).__new__(cls)
-            cls._instance._initialize()
+            cls._instance._initialize(engine, session_maker)
         return cls._instance
 
-    def _initialize(self):
-        # Get database file path from URL
-        db_path = DATABASE_URL.replace('sqlite:///', '')
-        
-        # Create directory if it doesn't exist
-        os.makedirs(os.path.dirname(db_path) or '.', exist_ok=True)
-        
-        # SQLite connection string
-        self.engine = create_engine(
-            DATABASE_URL, 
-            connect_args={"check_same_thread": False}  # Needed for SQLite
-        )
-        
-        self.SessionLocal = sessionmaker(
-            autocommit=False,
-            autoflush=False,
-            bind=self.engine
-        )
-        
-        # Create tables if they don't exist
-        if not self.tables_exist():
-            self.create_tables()
+    def _initialize(self, engine=None, session_maker=None):
+        if engine and session_maker:
+            self.engine = engine
+            self.SessionLocal = session_maker
+        else:
+            # Get database file path from URL
+            db_path = DATABASE_URL.replace('sqlite:///', '')
+            
+            # Create directory if it doesn't exist
+            os.makedirs(os.path.dirname(db_path) or '.', exist_ok=True)
+            
+            # SQLite connection string
+            self.engine = create_engine(
+                DATABASE_URL, 
+                connect_args={"check_same_thread": False}  # Needed for SQLite
+            )
+            
+            self.SessionLocal = sessionmaker(
+                autocommit=False,
+                autoflush=False,
+                bind=self.engine
+            )
+            
+            # Create tables if they don't exist
+            if not self.tables_exist():
+                self.create_tables()
 
     def get_session(self):
         return self.SessionLocal()
@@ -50,4 +54,7 @@ class Database:
 
     def create_tables(self):
         """Create all tables in the database"""
+        from models.user import User  # Ensure all models are imported
+        from models.task import Task
+        Base.metadata.create_all(self.engine)
         Base.metadata.create_all(bind=self.engine)
