@@ -4,6 +4,7 @@ langchain
 langchain-experimental
 langchain-community
 langchain-core
+langchain-openai
 openai
 SQLAlchemy
 python-dateutil
