@@ -147,6 +147,7 @@ class TestNL2SQLIntegration:
         result = await self.agent.process_natural_language(query)
         logger.debug(f"Resultado: {result}")
         
+        assert "error" not in result, f"Error en resultado: {result}"
         assert "Comprar leche" in result, "Tarea 'Comprar leche' no encontrada"
         assert "Llamar al médico" in result, "Tarea 'Llamar al médico' no encontrada"
         assert "Enviar informe" in result, "Tarea 'Enviar informe' no encontrada"
@@ -166,6 +167,7 @@ class TestNL2SQLIntegration:
         updated_task = session.query(Task).filter_by(id=task_id).first()
         session.close()
 
+        assert "error" not in result, f"Error en resultado: {result}"
         assert updated_task.status == "IN_PROGRESS"
 
     @pytest.mark.asyncio
@@ -184,6 +186,7 @@ class TestNL2SQLIntegration:
         updated_task = session.query(Task).filter_by(id=task_id).first()
         session.close()
 
+        assert "error" not in result, f"Error en resultado: {result}"
         assert updated_task.assignee == user.id
 
     @pytest.mark.asyncio
@@ -201,4 +204,5 @@ class TestNL2SQLIntegration:
         session.close()
         deleted_task = session.query(Task).filter_by(id=task_id).first()
 
+        assert "error" not in result, f"Error en resultado: {result}"
         assert deleted_task is None
